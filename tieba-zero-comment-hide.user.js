@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         贴吧零回复屏蔽
 // @namespace    http://tampermonkey.net/
-// @version      1.6
-// @description  屏蔽百度贴吧首页评论数为零的帖子
-// @match        https://tieba.baidu.com/*
+// @version      1.7
+// @description  屏蔽百度贴吧首页评论数为零的帖子。近期百度以普通帖子的形式出现大量广告，其基本没有评论，所以采用这种方式屏蔽。
+// @match        https://tieba.baidu.com/
+// @exclude      https://tieba.baidu.com/home
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==
