@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         贴吧零回复屏蔽
+// @name         贴吧视频帖子屏蔽
 // @namespace    http://tampermonkey.net/
-// @version      1.7
-// @description  屏蔽百度贴吧首页评论数为零的帖子。近期百度以普通帖子的形式出现大量广告，其基本没有评论，所以采用这种方式屏蔽。
+// @version      1.0
+// @description  屏蔽百度贴吧首页中的视频帖子
 // @match        https://tieba.baidu.com/
 // @exclude      https://tieba.baidu.com/home
 // @grant        none
@@ -12,28 +12,25 @@
 (function() {
     'use strict';
 
-    function hideZeroCommentPosts() {
-        document.querySelectorAll('.action-number').forEach(el => {
-            if (el.textContent.trim() === '评论') {
-                const container = el.closest('.thread-container, .virtual-list-item, .thread-card, [data-index]');
-                if (container) {
-                    container.style.display = 'none';
-                }
+    function hideVideoPosts() {
+        document.querySelectorAll('.art-video').forEach(el => {
+            const container = el.closest('.thread-container, .virtual-list-item, [data-index]');
+            if (container) {
+                container.style.display = 'none';
             }
         });
     }
 
     function init() {
-        let count = 0;
         const intervals = [500, 1000, 2000, 3000, 5000, 8000];
         intervals.forEach(delay => {
-            setTimeout(hideZeroCommentPosts, delay);
+            setTimeout(hideVideoPosts, delay);
         });
 
         let lastCheck = 0;
         const checkLoop = () => {
             if (Date.now() - lastCheck > 2000) {
-                hideZeroCommentPosts();
+                hideVideoPosts();
                 lastCheck = Date.now();
             }
             requestAnimationFrame(checkLoop);
