@@ -2,7 +2,7 @@
 // @name         贴吧零回复屏蔽
 // @namespace    http://tampermonkey.net/
 // @version      1.8
-// @description  屏蔽百度贴吧首页评论数为零的帖子及视频帖子（多为广告）
+// @description  屏蔽百度贴吧首页零回复广告帖子和视频帖子
 // @match        https://tieba.baidu.com/
 // @exclude      https://tieba.baidu.com/home
 // @grant        none
@@ -12,32 +12,27 @@
 (function() {
     'use strict';
 
-    function hidePosts() {
-        document.querySelectorAll('.thread-container, .virtual-list-item, .thread-card, [data-index]').forEach(container => {
-            // 屏蔽零回复帖子
+    function hideTargetPosts() {
+        document.querySelectorAll('.thread-container, .virtual-list-item, [data-index]').forEach(container => {
             const actionNumber = container.querySelector('.action-number');
             if (actionNumber && actionNumber.textContent.trim() === '评论') {
                 container.style.display = 'none';
                 return;
             }
-            // 屏蔽视频帖子
-            if (container.querySelector('.video-wrapper, video, [data-art-id], .art-video-player')) {
+            if (container.querySelector('.art-video')) {
                 container.style.display = 'none';
             }
         });
     }
 
     function init() {
-        let count = 0;
         const intervals = [500, 1000, 2000, 3000, 5000, 8000];
-        intervals.forEach(delay => {
-            setTimeout(hidePosts, delay);
-        });
+        intervals.forEach(delay => setTimeout(hideTargetPosts, delay));
 
         let lastCheck = 0;
         const checkLoop = () => {
             if (Date.now() - lastCheck > 2000) {
-                hidePosts();
+                hideTargetPosts();
                 lastCheck = Date.now();
             }
             requestAnimationFrame(checkLoop);
